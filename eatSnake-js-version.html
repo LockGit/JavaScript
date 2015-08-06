@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <style>
+    	body{
+    		margin: 0;
+    	}
+    	p{
+    		text-align: center;
+    		font-weight: bold;
+    	}
+		#main{
+			width: 450px;
+			height: 450px;
+			border:1px solid #000;
+			margin: 0 auto;
+		}
+		#snake{
+			width: 15px;
+			height: 15px;
+			background: #000;
+		}
+		#status,#score{
+			width: 300px;
+			color:red;
+			font-size: 18px;
+			font-weight: bold;
+			margin: 0 auto;
+			text-align: center;
+		}
+    </style>
+    <script>	
+    	//选取一个元素
+    	function $(element){
+    		return document.getElementById(element);
+    	}
+    	//产生一个随机数
+		function rand(num){
+			return Math.random()*num;
+		}
+    	window.onload=function(){
+	    	//sanke
+    		var snakeObj = {
+    			//画布
+    			canvas:$('main'),
+    			//画布行数
+    			rowNum:30,
+    			//画布列数
+    			colNum:30,
+    			//蛇
+    			snake:[],
+    			//移动速度
+    			speed:150,
+    			//移动方向,上,右,下,左,
+    			direction:"left",
+    			//计时器
+    			clock:null,
+    			//生成的点是否被填充
+    			isFill:true,
+    			//得分
+    			score:0,
+	    		show:function(){
+	    			//填充画布界面 
+		            for(var row=0;row<this.rowNum;row++){
+		                var tr=this.canvas.insertRow(-1);
+		                for(var col=0;col<this.colNum;col++) {
+		                    var td=tr.insertCell(-1);
+		                }
+		            }
+		            //生成一条蛇
+		            this.createSnake();
+		            //显示一个食物
+		            this.food();
+		            //监听键盘事件
+		            document.onkeyup=function(){
+	    				switch(window.event.keyCode){
+	    					case 37:{
+	    						//阻止蛇倒退走
+		                        if(snakeObj.direction=='right'){
+		                            break;
+		                        }
+		                        snakeObj.direction = 'left';
+		                        break;
+	    					}
+	    					case 38:{
+	    						//阻止蛇倒退走
+	    						if(snakeObj.direction=='down'){
+		                            break;
+		                        }
+		                        snakeObj.direction = 'up';
+		                        break;
+	    					}
+	    					case 39:{
+	    						//阻止蛇倒退走
+	    						if(snakeObj.direction=='left'){
+		                            break;
+		                        }
+		                        snakeObj.direction = 'right';
+		                        break;
+	    					}
+	    					case 40:{
+	    						//阻止蛇倒退走
+	    						if(snakeObj.direction=='up'){
+		                            break;
+		                        }
+		                        snakeObj.direction = 'down';
+		                        break;
+	    					}
+	    					case 13:{
+	    						//按下了回车
+	    						snakeObj.moveSnake();
+	    						break;
+	    					}
+	    					case 80:{
+	    						//按下了P键，暂停
+	    						snakeObj.pause();
+	    						break;
+	    					}
+	    				}
+	    			}
+	    		},
+	    		//暂停游戏
+	    		pause:function(){
+	    			clearInterval(snakeObj.clock);
+	    		},
+	    		//生产一个食物
+	    		food:function(){
+	    			//食物位置
+	    			foodX = parseInt(Math.random()*30);
+	    			foodY = parseInt(Math.random()*30);
+	    			while(this.isFill){
+	    				if(!this.checkCellFill(foodX,foodY)){
+    						this.canvas.rows[foodY].cells[foodX].style.backgroundColor = '#000';
+    						break;
+    					}
+	    			}
+	    		},
+	    		//生产一条蛇
+	    		createSnake:function(){
+	    			while(true){
+		                x = Math.floor(Math.random()*this.rowNum);
+		                y = Math.floor(Math.random()*this.colNum);
+		                if(!this.checkCellFill(x,y)){
+		                    this.canvas.rows[y].cells[x].style.backgroundColor = "green";
+		                    this.snake.push({x:x,y:y,color:'green'});
+		                    break;
+		                }
+            		}
+	    		},
+	    		//移动蛇
+	    		moveSnake:function(){
+	    			this.clock=setInterval(function(){
+	    				//擦除蛇
+	    				snakeObj.eraserSnake();
+	    				//移动一格
+	    				snakeObj.moveOneStep();
+	    				//画蛇
+	    				snakeObj.paintSnake();
+	    				//分数
+	    				$('score').innerHTML=snakeObj.score;
+	    			},this.speed);
+	    		},
+	    		//擦除蛇
+	    		eraserSnake:function(){
+	    			for (var i = 0;i < this.snake.length;i++) {
+	    				var x = this.snake[i].x;
+	    				var y = this.snake[i].y;
+	    				this.canvas.rows[y].cells[x].style.backgroundColor = "";
+	    			};
+	    		},
+	    		//移动一节
+	    		moveOneStep:function(){
+	    			//触发结束
+	    			if(this.checkNextStep()==false){
+	    				clearInterval(this.timer);
+		                $('status').innerHTML='游戏结束';
+		                //清除计时器
+		                clearInterval(snakeObj.clock);
+		                return;
+	    			}
+	    			//遇到食物
+	    			if(this.checkNextStep()==true){
+	    				var node = this.getNextPos();
+		                var x = node.x;
+		                var y = node.y;
+		                this.snake.unshift({x:x,y:y,color:"green"});
+		                //吃了一个食物，再产生一个食物
+		                snakeObj.food();
+		                //分数+1
+		                this.score++;
+		                return;
+	    			}
+	    			//下一步
+	    			var nextNode = this.getNextPos();
+	    			var nodeX = nextNode.x;
+	    			var nodeY = nextNode.y;
+	    			//蛇尾一格出队列,蛇头一格入队列,移动效果
+		            this.snake.pop();
+		            this.snake.unshift({x:nodeX,y:nodeY,color:"green"});
+	    		},
+	    		//画蛇
+	    		paintSnake:function(){
+	    			for (var i = 0;i < this.snake.length;i++) {
+	    				var x = this.snake[i].x;
+	    				var y = this.snake[i].y;
+	    				this.canvas.rows[y].cells[x].style.backgroundColor = "green";
+	    			}
+	    		},
+	    		//检查一个坐标点有没有被填充
+		        checkCellFill: function(x,y){
+		            if(this.canvas.rows[y].cells[x].style.backgroundColor == ""){
+		                return false;
+		            }
+		            return true;
+		        },
+		        //获得移动的下一点坐标
+		        getNextPos: function(){
+		            var x = this.snake[0].x;
+		            var y = this.snake[0].y;
+		            //向上
+		            if(this.direction=='up'){
+		                y--;
+		            }
+		            //向右
+		            else if(this.direction=='right'){
+		                x++;
+		            }
+		            //向下
+		            else if(this.direction=='down'){
+		                y++;
+		            }
+		            //向左
+		            else if(this.direction=='left'){
+		                x--;
+		            }
+		            //返回一个坐标
+		            return {
+		            	x:x,
+		            	y:y
+		            };
+        		},
+	    		//检测蛇移动下一步是什么
+	    		checkNextStep:function(){
+	    			//坐标
+	    			var node = this.getNextPos();
+	    			var x = node.x;
+		            var y = node.y;
+		            //判断游戏结束
+		            if(x<0||x>=this.colNum||y<0||y>=this.rowNum){
+                		return false;
+            		}
+            		//碰到蛇身,游戏结束
+            		for(var i=0; i<this.snake.length; i++){
+		                if(this.snake[i].x==x && this.snake[i].y==y){
+		                    return false;
+		                }
+            		}
+            		//有食物吃
+            		if(this.checkCellFill(x,y)){
+                		return true;
+            		}
+            		//空白点
+            		return -1;
+	    		}
+
+			}
+			snakeObj.show();	
+    	}
+    </script>
+</head>
+<body>
+	<p>JavaScript-贪吃蛇(Enter键开始,P键暂停)</p>
+	<table id="main" border="1" cellspacing="0" cellpadding="0"></table>
+	
+	<p>得分<div id="score"></div></p>
+	<div id="status">
+		
+	</div>
+</body>
+</html>

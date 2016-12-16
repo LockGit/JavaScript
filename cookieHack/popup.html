@@ -1,0 +1,28 @@
+<html>
+<head>
+    <meta charset="UTF-8" />
+	<title>Cookie Injection</title>
+	<script src="js/popup.js"></script>
+	<link href="css/popup.css" type="text/css" rel="stylesheet" charset="utf-8" />
+</head>
+<body>
+	<p>
+		Cookie Injection.
+	</p>
+	URL : <input type="text" id="domain" value="" style="width:250px;" /><br />
+	<textarea id="content" style="width:400px;height:200px;color:green;font-weight:bold;font-size:14px;"></textarea><br />
+	是否https:<input type="checkbox" id='https'/> | 
+	是否httpOnly:<input type="checkbox" id='httponly'/><br/>
+	<input type="button" id="exec_btn" value="注入Cookie" title="Inject Cookies" style="width:100px;" /> 
+	<input type="button" id="clear_btn" value="清除Cookie" title="Clear Cookies" style="width:100px;" /> 
+	<span class="help" id="status"></span>
+	<p>For example:</p>
+	<div id="example">
+		name=lock;<br/>
+		age=18;<br/>
+		sex=man;<br/>
+	</div>
+	<p>Then Click Injection , View Page Resources Cookies Details !</p>
+	<p>Author by Lock !</p>
+</body>
+</html>

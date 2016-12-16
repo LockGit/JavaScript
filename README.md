@@ -16,7 +16,7 @@ JavaScript Chrome 扩展程序
 ```
 
 ![](https://github.com/LockGit/JavaScript/blob/master/install-01.png)
-![](https://github.com/LockGit/JavaScript/blob/master/install-02.png)
+![](https://github.com/LockGit/JavaScript/blob/master/install-02.png = 400 x 250)
 
 ```
 测试：(启用https或者httpOnly需要针对https类型网站）

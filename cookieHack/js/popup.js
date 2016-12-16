@@ -19,10 +19,18 @@ function removeCurrentCookies(callback){
 }
 
 //注入cookie
-function inject_cookies(cookies){
+function inject_cookies(cookies,attr){
 	if(!cookies){
 		$('status').innerHTML = 'No Cookies Injected.';
 		return;
+	}
+    var isHttps = false;
+	var isHttpOnly = false;
+	if(attr.https){
+		isHttps= true;
+	}
+	if(attr.httpOnly){
+		isHttpOnly = true;
 	}
 	if (!chrome.cookies) {
 	  chrome.cookies = chrome.experimental.cookies;
@@ -50,8 +58,8 @@ function inject_cookies(cookies){
 			'value': v,
 			'domain': $('domain').value,
 			'path': '/',
-			'secure':false,
-			'httpOnly':false,
+			'secure':isHttps,
+			'httpOnly':isHttpOnly,
 			'expirationDate': e,
 		});
 	};
@@ -76,7 +84,15 @@ function init(){
 
 	//向本地注入一个cookie值
 	$('exec_btn').addEventListener('click', function () {
-		inject_cookies($('content').value);
+		//是否https，是否httpOnly
+        var attr = {};
+		if($('https').checked){
+			attr.https = true;
+		}
+		if($('httpOnly').checked){
+			attr.httpOnly = true;
+		}
+		inject_cookies($('content').value, attr);
 	});
 	//清除localStorage中的cookie
 	$('clear_btn').addEventListener('click',function(){

@@ -16,6 +16,7 @@ JavaScript Chrome 扩展程序
 ```
 
 ![](https://github.com/LockGit/JavaScript/blob/master/install-01.png)
+<img src="https://github.com/LockGit/JavaScript/blob/master/install-02.png" width="250px" height="400px"/>
 ![](https://github.com/LockGit/JavaScript/blob/master/install-02.png){:height="400px" width="250px"}.
 
 ```

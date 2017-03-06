@@ -1,14 +1,16 @@
 # JavaScript
-1,This is LockGit JavaScript Pro
-### 贪吃蛇 JavaScript 版 
+
+### eatSnake-js-version.html,贪吃蛇 JavaScript 版 
 ```
-直接浏览器打开html文件即可
+由js实现的贪吃蛇游戏,蛇尾一格出队列,蛇头一格入队列,移动效果
+直接浏览器打开eatSnake-js-version.html文件即可
 ```
 
-### cookieHack  Chrome 扩展插件
+### cookieHack, 一款修改当前网站任意cookie的 Chrome 扩展插件
 ```
-一个可以修改当前网站任意cookie的工具
-JavaScript Chrome 扩展程序
+源代码在cookieHack文件夹里，cookieHack为一个可以修改当前网站任意cookie的工具。
+JavaScript Chrome 扩展程序，因提交至google商店还需要$,所以直接进行了打包。
+
 使用方法：
 1，git clone https://github.com/LockGit/JavaScript.git
 2，打开Chrome浏览器
